@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexCart - Deploy to Render</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .step {
+            margin-bottom: 30px;
+            padding: 25px;
+            border-left: 4px solid #667eea;
+            background: #f8f9ff;
+            border-radius: 8px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 15px;
+        }
+        
+        .step h3 {
+            display: inline;
+            color: #333;
+            font-size: 1.4em;
+        }
+        
+        .step p {
+            margin-top: 15px;
+            color: #555;
+            line-height: 1.8;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #68d391;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 10px 10px 0;
+            transition: all 0.3s;
+        }
+        
+        .button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .button.success {
+            background: #48bb78;
+        }
+        
+        .button.success:hover {
+            background: #38a169;
+        }
+        
+        .warning {
+            background: #fff5f5;
+            border-left: 4px solid #f56565;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .warning strong {
+            color: #f56565;
+        }
+        
+        .env-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .env-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .env-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .env-table tr:nth-child(even) {
+            background: #f7fafc;
+        }
+        
+        .env-table code {
+            background: #edf2f7;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+        }
+        
+        .checklist li:before {
+            content: "☐ ";
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .url-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .url-box a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Deploy NexCart to Render</h1>
+            <p>Step-by-Step Visual Guide - Takes 15 minutes</p>
+        </div>
+        
+        <div class="content">
+            <!-- Step 1 -->
+            <div class="step">
+                <span class="step-number">1</span>
+                <h3>Create MongoDB Database (5 min)</h3>
+                <p>
+                    <strong>Go to:</strong> 
+                    <a href="https://www.mongodb.com/cloud/atlas/register" target="_blank" class="button">MongoDB Atlas Sign Up</a>
+                </p>
+                <p>
+                    1. Sign up with Google (fastest)<br>
+                    2. Click "Build a Database" → Choose FREE (M0)<br>
+                    3. Create user: <code>nexcartadmin</code> / (your password - <strong>SAVE IT!</strong>)<br>
+                    4. Allow access from: <code>0.0.0.0/0</code> (Anywhere)<br>
+                    5. Click "Connect" → "Connect your application"<br>
+                    6. Copy connection string and replace <code>&lt;password&gt;</code> with your actual password<br>
+                    7. Add <code>/nexcart</code> at the end
+                </p>
+                <div class="code-block">
+mongodb+srv://nexcartadmin:YOUR_PASSWORD@cluster0.xxxxx.mongodb.net/nexcart?retryWrites=true&w=majority
+                </div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="step">
+                <span class="step-number">2</span>
+                <h3>Prepare Backend ZIP (1 min)</h3>
+                <p>
+                    <strong>Run this script:</strong> Double-click <code>prepare-for-render.bat</code> in the nexcart folder
+                </p>
+                <p>
+                    OR manually:<br>
+                    1. Go to: <code>C:\Users\nitin\OneDrive\E comerse website\nexcart</code><br>
+                    2. Right-click <code>backend</code> folder<br>
+                    3. Click "Send to" → "Compressed (zipped) folder"<br>
+                    4. This creates <code>backend.zip</code>
+                </p>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="step">
+                <span class="step-number">3</span>
+                <h3>Deploy to Render (7 min)</h3>
+                <p>
+                    <strong>Go to:</strong>
+                    <a href="https://render.com" target="_blank" class="button">Render.com</a>
+                </p>
+                <p>
+                    1. Sign up with GitHub or Google<br>
+                    2. Click <strong>"New +"</strong> → <strong>"Web Service"</strong><br>
+                    3. Click <strong>"Upload a ZIP file"</strong><br>
+                    4. Upload your <code>backend-for-render.zip</code>
+                </p>
+                
+                <h4 style="margin-top: 20px; color: #333;">Configure Settings:</h4>
+                <table class="env-table">
+                    <tr>
+                        <th>Setting</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Name</strong></td>
+                        <td><code>nexcart-backend</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Region</strong></td>
+                        <td><code>Oregon (US West)</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Runtime</strong></td>
+                        <td><code>Node</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Build Command</strong></td>
+                        <td><code>npm install && npm run build</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Start Command</strong></td>
+                        <td><code>node dist/server.js</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Plan</strong></td>
+                        <td><code>Free</code></td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="step">
+                <span class="step-number">4</span>
+                <h3>Add Environment Variables ⚠️ IMPORTANT</h3>
+                <p>Click <strong>"Advanced"</strong> → <strong>"Add Environment Variable"</strong> and add these 6 variables:</p>
+                
+                <table class="env-table">
+                    <tr>
+                        <th>KEY</th>
+                        <th>VALUE</th>
+                    </tr>
+                    <tr>
+                        <td><code>NODE_ENV</code></td>
+                        <td><code>production</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>PORT</code></td>
+                        <td><code>10000</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>MONGODB_URI</code></td>
+                        <td>Your MongoDB connection string from Step 1</td>
+                    </tr>
+                    <tr>
+                        <td><code>JWT_SECRET</code></td>
+                        <td><code>nexcart-super-secret-jwt-key-2024</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>JWT_EXPIRE</code></td>
+                        <td><code>7d</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>FRONTEND_URL</code></td>
+                        <td><code>https://frontend-fawn-psi-99.vercel.app</code></td>
+                    </tr>
+                </table>
+                
+                <div class="warning">
+                    <strong>⚠️ Important:</strong> Replace MONGODB_URI with your ACTUAL MongoDB connection string from Step 1!
+                </div>
+            </div>
+            
+            <!-- Step 5 -->
+            <div class="step">
+                <span class="step-number">5</span>
+                <h3>Deploy & Test (2 min)</h3>
+                <p>
+                    1. Click <strong>"Create Web Service"</strong><br>
+                    2. Wait 3-5 minutes for deployment<br>
+                    3. When it shows <strong>"Live"</strong>, test it:
+                </p>
+                <div class="code-block">
+https://nexcart-backend-xxxxx.onrender.com/api/health
+                </div>
+                <p>You should see:</p>
+                <div class="code-block">
+{
+  "status": "OK",
+  "message": "NexCart API is running"
+}
+                </div>
+            </div>
+            
+            <!-- Step 6 -->
+            <div class="step">
+                <span class="step-number">6</span>
+                <h3>Connect Frontend (2 min)</h3>
+                <p>
+                    <strong>Go to:</strong>
+                    <a href="https://vercel.com/dashboard" target="_blank" class="button">Vercel Dashboard</a>
+                </p>
+                <p>
+                    1. Click your project: <code>nexcart-frontend</code><br>
+                    2. Go to: <strong>Settings</strong> → <strong>Environment Variables</strong><br>
+                    3. Add new variable:<br>
+                    &nbsp;&nbsp;&nbsp;- Name: <code>NEXT_PUBLIC_API_URL</code><br>
+                    &nbsp;&nbsp;&nbsp;- Value: <code>https://nexcart-backend-xxxxx.onrender.com/api</code><br>
+                    &nbsp;&nbsp;&nbsp;- Environment: ✅ Production<br>
+                    4. Click <strong>"Save"</strong><br>
+                    5. Go to <strong>Deployments</strong> → Redeploy latest
+                </p>
+            </div>
+            
+            <!-- Success -->
+            <div class="url-box">
+                <h2>🎉 Deployment Complete!</h2>
+                <p style="margin-top: 15px;">Your Live URLs:</p>
+                <p style="margin-top: 10px;">
+                    Frontend: <a href="https://frontend-fawn-psi-99.vercel.app" target="_blank">https://frontend-fawn-psi-99.vercel.app</a>
+                </p>
+                <p style="margin-top: 5px;">
+                    Backend: <code>https://nexcart-backend-xxxxx.onrender.com</code>
+                </p>
+            </div>
+            
+            <!-- Quick Links -->
+            <div style="text-align: center; margin-top: 30px;">
+                <h3 style="margin-bottom: 15px;">Quick Links:</h3>
+                <a href="https://www.mongodb.com/cloud/atlas/register" target="_blank" class="button">MongoDB Atlas</a>
+                <a href="https://render.com" target="_blank" class="button success">Render</a>
+                <a href="https://vercel.com/dashboard" target="_blank" class="button">Vercel</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
