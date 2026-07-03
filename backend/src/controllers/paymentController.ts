@@ -5,14 +5,20 @@ import Order from '../models/Order';
 import { AuthRequest } from '../middleware/authMiddleware';
 import { asyncHandler, AppError } from '../middleware/errorHandler';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2024-11-20.acacia' as any
 });
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID!,
-  key_secret: process.env.RAZORPAY_KEY_SECRET!
-});
+let razorpay: Razorpay | null = null;
+const getRazorpay = () => {
+  if (!razorpay) {
+    razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder',
+      key_secret: process.env.RAZORPAY_KEY_SECRET || 'placeholder'
+    });
+  }
+  return razorpay;
+};
 
 // @desc    Create Stripe checkout session
 // @route   POST /api/payments/stripe
@@ -110,7 +116,7 @@ export const createRazorpayOrder = asyncHandler(async (req: AuthRequest, res: Re
     }
   };
 
-  const razorpayOrder = await razorpay.orders.create(options);
+  const razorpayOrder = await getRazorpay().orders.create(options);
 
   res.status(200).json({
     success: true,

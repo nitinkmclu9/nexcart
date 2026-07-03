@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FcGoogle } from 'react-icons/fc';
+import { useGoogleLogin } from '@react-oauth/google';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
 
@@ -39,6 +41,26 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  const handleGoogleSuccess = async (tokenResponse: any) => {
+    setLoading(true);
+    try {
+      const response = await api.post('/auth/google', { credential: tokenResponse.credential });
+      localStorage.setItem('token', response.data.token);
+      toast.success('Google login successful!');
+      router.push('/');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Google login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: handleGoogleSuccess,
+    onError: () => toast.error('Google sign-in failed'),
+    flow: 'implicit'
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center px-4">
@@ -108,6 +130,25 @@ export default function LoginPage() {
             className="w-full btn-primary disabled:opacity-50"
           >
             {loading ? 'Signing in...' : 'Sign In'}
+          </button>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">or continue with</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => googleLogin()}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-200 px-6 py-3 rounded-lg font-semibold hover:border-blue-600 hover:text-blue-600 transition-all duration-200 disabled:opacity-50"
+          >
+            <FcGoogle className="text-2xl" />
+            <span>Sign in with Google</span>
           </button>
         </form>
 

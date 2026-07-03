@@ -10,6 +10,8 @@ export interface IUser extends Document {
   addresses: mongoose.Types.ObjectId[];
   wishlist: mongoose.Types.ObjectId[];
   isBlocked: boolean;
+  resetPasswordOTP?: string;
+  resetPasswordOTPExpiry?: Date;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -56,6 +58,12 @@ const userSchema = new Schema<IUser>(
     isBlocked: {
       type: Boolean,
       default: false
+    },
+    resetPasswordOTP: {
+      type: String
+    },
+    resetPasswordOTPExpiry: {
+      type: Date
     }
   },
   {
